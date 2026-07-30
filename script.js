@@ -37,6 +37,7 @@ function createEpisodeCard({
   aElement.rel = "noopener noreferrer";
 
   const summaryElement = document.createElement("div");
+  summaryElement.classList.add("summary");
   summaryElement.innerHTML = summary;
 
   episodeCard.append(title, img, summaryElement, aElement);

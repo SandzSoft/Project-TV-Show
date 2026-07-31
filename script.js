@@ -29,6 +29,8 @@ function createEpisodeCard({
   const img = document.createElement("img");
   img.src = medium;
   img.alt = `${name} episode image`;
+  img.width = 210;
+  img.height = 118;
   img.loading = "lazy";
 
   const aElement = document.createElement("a");

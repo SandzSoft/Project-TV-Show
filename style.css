@@ -1,3 +1,9 @@
+/* ---------- Global ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
   background-color: #f8fafc;
@@ -7,85 +13,124 @@ body {
   padding: 2rem;
 }
 
-/* Episode cards container */
+/* ---------- Episode Grid ---------- */
+
 #root {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* Episode card */
+/* ---------- Episode Card ---------- */
+
 article {
-  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 article:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.15);
 }
 
-/* Episode title */
+/* ---------- Title ---------- */
+
 h2 {
   margin: 0;
   padding: 1rem;
+
+  min-height: 5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
   background: linear-gradient(135deg, #2563eb, #7c3aed);
   color: white;
+
   font-size: 1.1rem;
-  text-align: center;
-  letter-spacing: 0.3px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
-/* Episode image */
+/* ---------- Image ---------- */
+
 img {
   display: block;
   width: 100%;
   height: auto;
 }
 
-/* Episode summary */
+/* ---------- Summary ---------- */
+
 .summary {
-  padding: 1.2rem;
+  flex: 1;
+
+  padding: 1.25rem;
+
   color: #475569;
   line-height: 1.7;
-  font-size: 0.95rem;
+  font-size: 0.96rem;
 }
 
 .summary p {
   margin: 0;
 }
 
-/* TVMaze link inside cards */
+/* ---------- TVMaze Link ---------- */
+
 article a {
-  display: inline-block;
-  margin: 0 1.2rem 1.2rem;
-  padding: 0.6rem 1rem;
-  background-color: #2563eb;
+  align-self: flex-start;
+
+  margin: 0 1.25rem 1.25rem;
+  padding: 0.65rem 1.1rem;
+
+  background: #2563eb;
   color: white;
-  border-radius: 999px;
+
   text-decoration: none;
   font-weight: 600;
-  transition: background-color 0.2s ease;
+
+  border-radius: 999px;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 article a:hover {
-  background-color: #1d4ed8;
+  background: #1d4ed8;
+  transform: scale(1.03);
 }
 
-/* Footer */
+/* ---------- Footer ---------- */
+
 footer {
   max-width: 1400px;
   margin: 3rem auto 0;
-  padding: 1.2rem;
+
+  padding: 1.25rem;
+
   text-align: center;
-  background-color: #e2e8f0;
+
+  background: #e2e8f0;
   border-radius: 12px;
+
   color: #475569;
 }
 
@@ -99,7 +144,8 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* Responsive design */
+/* ---------- Mobile ---------- */
+
 @media (max-width: 600px) {
   body {
     padding: 1rem;

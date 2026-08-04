@@ -6,6 +6,12 @@ const state = {
 
 function setup() {
   state.episodes = getAllEpisodes();
+
+  const input = document.getElementById("episode-search");
+  input.addEventListener("input", function () {
+    state.searchTerm = input.value.toLowerCase();
+    render();
+  });
   render();
 }
 
@@ -28,7 +34,7 @@ function render() {
 }
 
 function updateEpisodeCount(count) {
-  const countElem = document.getElementById("disply-episodes");
+  const countElem = document.getElementById("display-episodes");
   countElem.textContent = `Displaying ${count} episode(s)`;
 }
 
@@ -68,11 +74,5 @@ function createEpisodeCard({
 
   return episodeCard;
 }
-
-const input = document.getElementById("episode-search");
-input.addEventListener("input", function () {
-  state.searchTerm = input.value.toLowerCase();
-  render();
-});
 
 window.onload = setup;

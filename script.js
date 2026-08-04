@@ -1,14 +1,35 @@
 //You can edit ALL of the code here
+const state = {
+  episodes: [],
+  searchTerm: "",
+};
+
 function setup() {
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
+  state.episodes = getAllEpisodes();
+  render();
 }
 
-function makePageForEpisodes(episodeList) {
+function render() {
   const rootElem = document.getElementById("root");
-  const episodeCards = episodeList.map(createEpisodeCard);
+  rootElem.innerHTML = "";
 
+  const filteredEpisodes = state.episodes.filter((episode) => {
+    const nameMatch = episode.name.toLowerCase().includes(state.searchTerm);
+    const summaryMatch = episode.summary
+      .toLowerCase()
+      .includes(state.searchTerm);
+    return nameMatch || summaryMatch;
+  });
+
+  const episodeCards = filteredEpisodes.map(createEpisodeCard);
   rootElem.append(...episodeCards);
+
+  updateEpisodeCount(filteredEpisodes.length);
+}
+
+function updateEpisodeCount(count) {
+  const countElem = document.getElementById("disply-episodes");
+  countElem.textContent = `Displaying ${count} episode(s)`;
 }
 
 function createEpisodeCard({
@@ -47,5 +68,11 @@ function createEpisodeCard({
 
   return episodeCard;
 }
+
+const input = document.getElementById("episode-search");
+input.addEventListener("input", function () {
+  state.searchTerm = input.value.toLowerCase();
+  render();
+});
 
 window.onload = setup;

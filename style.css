@@ -17,10 +17,11 @@ body {
 
 #root {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 320px));
   gap: 2rem;
   max-width: 1400px;
   margin: 0 auto;
+  justify-content: left;
 }
 
 /* ---------- Episode Card ---------- */
@@ -154,4 +155,16 @@ footer a:hover {
   #root {
     grid-template-columns: 1fr;
   }
+}
+
+/* -------- Search Bar -------*/
+#episode-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e2e8f0;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  max-width: 1400px;
+  margin: 0 auto 2rem;
 }

@@ -7,6 +7,37 @@ const state = {
 function setup() {
   state.episodes = getAllEpisodes();
 
+  const selector = document.getElementById("episode-selector");
+
+  state.episodes.forEach((ep) => {
+    const option = document.createElement("option");
+    option.value = ep.id;
+    option.textContent = `S${String(ep.season).padStart(2, "0")}E${String(
+      ep.number,
+    ).padStart(2, "0")} - ${ep.name}`;
+    selector.appendChild(option);
+  });
+
+  selector.addEventListener("change", function () {
+    const selectedId = selector.value;
+
+    if (!selectedId) {
+      state.searchTerm = "";
+      render();
+      return;
+    }
+
+    const selectedEpisode = state.episodes.find((ep) => ep.id == selectedId);
+
+    const rootElem = document.getElementById("root");
+    rootElem.innerHTML = "";
+
+    const card = createEpisodeCard(selectedEpisode);
+    rootElem.appendChild(card);
+
+    updateEpisodeCount(1);
+  });
+
   const input = document.getElementById("episode-search");
   input.addEventListener("input", function () {
     state.searchTerm = input.value.toLowerCase();

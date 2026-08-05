@@ -13,6 +13,40 @@ body {
   padding: 2rem;
 }
 
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  margin: 20px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: #f4f4f4;
+}
+
+.controls label {
+  font-weight: bold;
+}
+
+.controls input,.controls select {
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+}
+
+#search-input {
+  min-width: 250px;
+}
+
+#episode-count {
+  margin-left: auto;
+  font-weight: bold;
+}
+
 /* ---------- Episode Grid ---------- */
 
 #root {
@@ -157,14 +191,3 @@ footer a:hover {
   }
 }
 
-/* -------- Search Bar -------*/
-#episode-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #e2e8f0;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  max-width: 1400px;
-  margin: 0 auto 2rem;
-}

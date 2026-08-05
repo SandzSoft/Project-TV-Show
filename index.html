@@ -13,24 +13,18 @@
   </head>
 
   <body>
-    <section id="episode-controls">
-      <label for="episode-selector">
-        Episode Selector:
-        <select id="episode-selector">
-          <option value="">-- Select an Episode --</option>
-        </select>
-      </label>
+    <div class="controls">
+      <label for="search-input">Search Episodes:</label>
+      <input
+        type="text"
+        id="episode-search"
+        placeholder="Enter episode name..."
+      />
+      <label for="episode-selector">Jump to episode:</label>
+      <select id="episode-selector"></select>
 
-      <label for="episode-search">
-        Search For Episodes:
-        <input
-          type="text"
-          id="episode-search"
-          placeholder="🔍Enter Episode Name"
-        />
-      </label>
-      <p id="display-episodes"></p>
-    </section>
+      <p id="episode-count"></p>
+    </div>
 
     <main id="root"></main>
     <footer>

@@ -2,71 +2,78 @@
 const state = {
   episodes: [],
   searchTerm: "",
-  selectedEpisodeId: "",
+  selectedEpisode: null,
 };
 
+const elements = {};
+
 function setup() {
+  elements.searchInput = document.getElementById("episode-search");
+  elements.episodeSelect = document.getElementById("episode-selector");
+  elements.episodeCount = document.getElementById("episode-count");
+  elements.root = document.getElementById("root");
   state.episodes = getAllEpisodes();
+  createEpisodeOptions(state.episodes);
   setupSearch();
   setupSelector();
   render();
 }
-function setupSearch() {
-  const input = document.getElementById("episode-search");
 
-  input.addEventListener("input", function () {
-    state.searchTerm = input.value.toLowerCase();
-    state.selectedEpisodeId = "";
+function createEpisodeOptions(episodes) {
+  const allOption = document.createElement("option");
+  allOption.value = "";
+  allOption.textContent = "All Episodes";
+  elements.episodeSelect.appendChild(allOption);
+
+  episodes.forEach((episode) => {
+    const option = document.createElement("option");
+
+    option.value = episode.id;
+    option.textContent = `${formatEpisodeCode(
+      episode.season,
+      episode.number,
+    )} - ${episode.name}`;
+
+    elements.episodeSelect.appendChild(option);
+  });
+}
+
+function setupSearch() {
+  elements.searchInput.addEventListener("input", (event) => {
+    state.searchTerm = elements.searchInput.value.toLowerCase();
+    state.selectedEpisode = null;
+    elements.episodeSelect.value = "";
     render();
   });
 }
 
 function setupSelector() {
-  const selector = document.getElementById("episode-selector");
-  state.episodes.forEach((ep) => {
-    const option = document.createElement("option");
-    option.value = ep.id;
-    option.textContent = `S${String(ep.season).padStart(2, "0")}E${String(
-      ep.number,
-    ).padStart(2, "0")} - ${ep.name}`;
-    selector.appendChild(option);
-  });
-
-  selector.addEventListener("change", () => {
-    state.selectedEpisodeId = selector.value;
+  elements.episodeSelect.addEventListener("change", (event) => {
+    state.selectedEpisode =
+      event.target.value === "" ? null : Number(event.target.value);
     state.searchTerm = "";
+    elements.searchInput.value = "";
     render();
   });
 }
-function render() {
-  const rootElem = document.getElementById("root");
-  rootElem.innerHTML = "";
 
-  let episodesToShow = state.episodes;
-
-  if (state.selectedEpisodeId) {
-    episodesToShow = episodesToShow.filter(
-      (ep) => ep.id == state.selectedEpisodeId,
-    );
-  } else {
-    episodesToShow = episodesToShow.filter((episode) => {
-      const nameMatch = episode.name.toLowerCase().includes(state.searchTerm);
-      const summaryMatch = episode.summary
-        .toLowerCase()
-        .includes(state.searchTerm);
-      return nameMatch || summaryMatch;
-    });
-  }
-
-  const episodeCards = episodesToShow.map(createEpisodeCard);
-  rootElem.append(...episodeCards);
-
-  updateEpisodeCount(episodesToShow.length);
+function getDisplayedEpisodes() {
+  const displayedEpisodes =
+    state.selectedEpisode !== null
+      ? [state.episodes.find((e) => e.id === state.selectedEpisode)]
+      : state.episodes.filter(
+          (episode) =>
+            episode.name.toLowerCase().includes(state.searchTerm) ||
+            episode.summary?.toLowerCase().includes(state.searchTerm),
+        );
+  return displayedEpisodes;
 }
 
-function updateEpisodeCount(count) {
-  const countElem = document.getElementById("display-episodes");
-  countElem.textContent = `Displaying ${count} episode(s)`;
+function render() {
+  const displayedEpisodes = getDisplayedEpisodes();
+  elements.episodeCount.textContent = `Displaying ${displayedEpisodes.length} / ${state.episodes.length} episodes`;
+  const cards = displayedEpisodes.map(createEpisodeCard);
+  elements.root.replaceChildren(...cards);
 }
 
 function createEpisodeCard({
@@ -80,9 +87,7 @@ function createEpisodeCard({
   const episodeCard = document.createElement("article");
 
   const title = document.createElement("h2");
-  title.textContent =
-    name +
-    ` - S${String(season).padStart(2, "0")}E${String(number).padStart(2, "0")}`;
+  title.textContent = name + ` - S${formatEpisodeCode(season, number)}`;
 
   const img = document.createElement("img");
   img.src = medium;
@@ -100,10 +105,15 @@ function createEpisodeCard({
   const summaryElement = document.createElement("div");
   summaryElement.classList.add("summary");
   summaryElement.innerHTML = summary;
-
   episodeCard.append(title, img, summaryElement, aElement);
 
   return episodeCard;
+}
+
+function formatEpisodeCode(season, number) {
+  const seasonCode = String(season).padStart(2, "0");
+  const episodeCode = String(number).padStart(2, "0");
+  return `S${seasonCode}E${episodeCode}`;
 }
 
 window.onload = setup;

@@ -2,13 +2,27 @@
 const state = {
   episodes: [],
   searchTerm: "",
+  selectedEpisodeId: "",
 };
 
 function setup() {
   state.episodes = getAllEpisodes();
+  setupSearch();
+  setupSelector();
+  render();
+}
+function setupSearch() {
+  const input = document.getElementById("episode-search");
 
+  input.addEventListener("input", function () {
+    state.searchTerm = input.value.toLowerCase();
+    state.selectedEpisodeId = "";
+    render();
+  });
+}
+
+function setupSelector() {
   const selector = document.getElementById("episode-selector");
-
   state.episodes.forEach((ep) => {
     const option = document.createElement("option");
     option.value = ep.id;
@@ -18,50 +32,36 @@ function setup() {
     selector.appendChild(option);
   });
 
-  selector.addEventListener("change", function () {
-    const selectedId = selector.value;
-
-    if (!selectedId) {
-      state.searchTerm = "";
-      render();
-      return;
-    }
-
-    const selectedEpisode = state.episodes.find((ep) => ep.id == selectedId);
-
-    const rootElem = document.getElementById("root");
-    rootElem.innerHTML = "";
-
-    const card = createEpisodeCard(selectedEpisode);
-    rootElem.appendChild(card);
-
-    updateEpisodeCount(1);
-  });
-
-  const input = document.getElementById("episode-search");
-  input.addEventListener("input", function () {
-    state.searchTerm = input.value.toLowerCase();
+  selector.addEventListener("change", () => {
+    state.selectedEpisodeId = selector.value;
+    state.searchTerm = "";
     render();
   });
-  render();
 }
-
 function render() {
   const rootElem = document.getElementById("root");
   rootElem.innerHTML = "";
 
-  const filteredEpisodes = state.episodes.filter((episode) => {
-    const nameMatch = episode.name.toLowerCase().includes(state.searchTerm);
-    const summaryMatch = episode.summary
-      .toLowerCase()
-      .includes(state.searchTerm);
-    return nameMatch || summaryMatch;
-  });
+  let episodesToShow = state.episodes;
 
-  const episodeCards = filteredEpisodes.map(createEpisodeCard);
+  if (state.selectedEpisodeId) {
+    episodesToShow = episodesToShow.filter(
+      (ep) => ep.id == state.selectedEpisodeId,
+    );
+  } else {
+    episodesToShow = episodesToShow.filter((episode) => {
+      const nameMatch = episode.name.toLowerCase().includes(state.searchTerm);
+      const summaryMatch = episode.summary
+        .toLowerCase()
+        .includes(state.searchTerm);
+      return nameMatch || summaryMatch;
+    });
+  }
+
+  const episodeCards = episodesToShow.map(createEpisodeCard);
   rootElem.append(...episodeCards);
 
-  updateEpisodeCount(filteredEpisodes.length);
+  updateEpisodeCount(episodesToShow.length);
 }
 
 function updateEpisodeCount(count) {

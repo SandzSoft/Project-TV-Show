@@ -7,27 +7,47 @@ const state = {
 
 const elements = {};
 
+// Fetch episodes from the TVMaze API
+function fetchEpisodes() {
+  return fetch("https://api.tvmaze.com/shows/82/episodes").then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  });
+}
+
+// Setup function to initialize the application
 function setup() {
   elements.searchInput = document.getElementById("episode-search");
   elements.episodeSelect = document.getElementById("episode-selector");
   elements.episodeCount = document.getElementById("episode-count");
   elements.root = document.getElementById("root");
-  state.episodes = getAllEpisodes();
-  createEpisodeOptions(state.episodes);
-  setupSearch();
-  setupSelector();
-  render();
+
+  elements.root.textContent = "Loading episodes...";
+
+  fetchEpisodes()
+    .then((episodes) => {
+      state.episodes = episodes;
+      createEpisodeOptions();
+      setupSearch();
+      setupSelector();
+      render();
+    })
+    .catch((error) => {
+      elements.root.textContent = "Failed to load episodes.";
+      console.error(error);
+    });
 }
 
-function createEpisodeOptions(episodes) {
+// Create options for the episode selector dropdown
+function createEpisodeOptions() {
   const allOption = document.createElement("option");
   allOption.value = "";
   allOption.textContent = "All Episodes";
   elements.episodeSelect.appendChild(allOption);
-
-  episodes.forEach((episode) => {
+  state.episodes.forEach((episode) => {
     const option = document.createElement("option");
-
     option.value = episode.id;
     option.textContent = `${formatEpisodeCode(
       episode.season,
@@ -38,6 +58,7 @@ function createEpisodeOptions(episodes) {
   });
 }
 
+// Setup search input event listener
 function setupSearch() {
   elements.searchInput.addEventListener("input", (event) => {
     state.searchTerm = elements.searchInput.value.toLowerCase();
@@ -47,6 +68,7 @@ function setupSearch() {
   });
 }
 
+// Setup episode selector event listener
 function setupSelector() {
   elements.episodeSelect.addEventListener("change", (event) => {
     state.selectedEpisode =
@@ -57,6 +79,7 @@ function setupSelector() {
   });
 }
 
+// Get the episodes to be displayed based on search term or selected episode
 function getDisplayedEpisodes() {
   const displayedEpisodes =
     state.selectedEpisode !== null
@@ -69,6 +92,7 @@ function getDisplayedEpisodes() {
   return displayedEpisodes;
 }
 
+// Render the episodes to the DOM
 function render() {
   const displayedEpisodes = getDisplayedEpisodes();
   elements.episodeCount.textContent = `Displaying ${displayedEpisodes.length} / ${state.episodes.length} episodes`;
@@ -76,21 +100,15 @@ function render() {
   elements.root.replaceChildren(...cards);
 }
 
-function createEpisodeCard({
-  url,
-  name,
-  season,
-  number,
-  image: { medium },
-  summary,
-}) {
+// Create a card element for an episode
+function createEpisodeCard({ url, name, season, number, image, summary }) {
   const episodeCard = document.createElement("article");
 
   const title = document.createElement("h2");
-  title.textContent = name + ` - S${formatEpisodeCode(season, number)}`;
+  title.textContent = name + ` - ${formatEpisodeCode(season, number)}`;
 
   const img = document.createElement("img");
-  img.src = medium;
+  img.src = image?.medium || "";
   img.alt = `${name} episode image`;
   img.width = 210;
   img.height = 118;
@@ -110,10 +128,12 @@ function createEpisodeCard({
   return episodeCard;
 }
 
+// Format the episode code as SxxExx
 function formatEpisodeCode(season, number) {
   const seasonCode = String(season).padStart(2, "0");
   const episodeCode = String(number).padStart(2, "0");
   return `S${seasonCode}E${episodeCode}`;
 }
 
+// Initialize the application when the window loads
 window.onload = setup;

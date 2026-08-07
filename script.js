@@ -24,7 +24,7 @@ function setup() {
   elements.episodeCount = document.getElementById("episode-count");
   elements.root = document.getElementById("root");
 
-  elements.root.textContent = "Loading episodes...";
+  elements.root.innerHTML = `<div class="loading">Loading episodes...</div>`;
 
   fetchEpisodes()
     .then((episodes) => {
@@ -35,7 +35,7 @@ function setup() {
       render();
     })
     .catch((error) => {
-      elements.root.textContent = "Failed to load episodes.";
+      elements.root.innerHTML = `<div class="error">Failed to load episodes.</div>`;
       console.error(error);
     });
 }

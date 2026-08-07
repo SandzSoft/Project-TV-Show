@@ -192,3 +192,15 @@ footer a:hover {
   }
 }
 
+
+.loading, .error {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error {
+  color: #dc2626;
+  font-weight: bold;
+}
